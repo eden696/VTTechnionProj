@@ -4,9 +4,17 @@ import numpy as np
 CodeWord = np.ndarray
 Code = List[CodeWord]
 
+# NIV
+
 # return a list of every word in the code VT_a(n)
 def VTCodeGenerator(a: int, n: int) -> Code:
     return
+
+# return all words of length n
+def AllWord(n: int) -> Set[CodeWord]:
+    return
+
+# EDEN
 
 # return every word in the insertion in the insertion ball of `word`.
 # i.e. words that are created by inserting a single bit.
@@ -17,9 +25,7 @@ def WordInsertionBall(word: CodeWord) -> Set[CodeWord]:
 def CodeInsertionBall(code: List[CodeWord]) -> Set[CodeWord]:
     return
 
-# return all words of length n
-def AllWord(n: int) -> Set[CodeWord]:
-    return
+# FCFS
 
 # exhastive search for words not covered by codes
 def getWordsNotCovered(words: Set[CodeWord], codes: List[Code]) -> Set[CodeWord]:

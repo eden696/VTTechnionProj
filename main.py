@@ -1,25 +1,29 @@
-# This is a sample Python script.
+from typing import *
+import numpy as np
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+CodeWord = np.ndarray
+Code = List[CodeWord]
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-def VTCodeGenerator(a, n):
+# return a list of every word in the code VT_a(n)
+def VTCodeGenerator(a: int, n: int) -> Code:
     return
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+# return every word in the insertion in the insertion ball of `word`.
+# i.e. words that are created by inserting a single bit.
+def WordInsertionBall(word: CodeWord) -> Set[CodeWord]:
+    return
 
-'''
-we want for n - the length of the 
-function that need implementation:
-1.generator for the VT words
+# get the insertion ball of all words in the code togather
+def CodeInsertionBall(code: List[CodeWord]) -> Set[CodeWord]:
+    return
 
+# return all words of length n
+def AllWord(n: int) -> Set[CodeWord]:
+    return
 
-'''
+# exhastive search for words not covered by codes
+def getWordsNotCovered(words: Set[CodeWord], codes: List[Code]) -> Set[CodeWord]:
+    return
+
+# get words not covered by VT0, and those not covered by both VT0 and VT((n+1)/2)
+# and compare the sizes

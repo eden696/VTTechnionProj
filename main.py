@@ -8,7 +8,8 @@ def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
     print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
 
-
+def VTCodeGenerator(a, n):
+    return
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('PyCharm')
@@ -16,5 +17,9 @@ if __name__ == '__main__':
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
 '''
-we want fo n - the length of the 
+we want for n - the length of the 
+function that need implementation:
+1.generator for the VT words
+
+
 '''

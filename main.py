@@ -73,11 +73,22 @@ def CodeInsertionBall(code: Code) -> Code:
     # deduplicate the above words and return the resulting code
     return np.unique(duplicated, axis=0)
 
-# FCFS
+def getWordsNotCovered(code1: Code, code2: Code) -> Code:
+    """
+    find all words in code1, which are not covered by insertion balls in code2.
 
-# exhastive search for words not covered by codes
-def getWordsNotCovered(words: Set[Word], codes: List[Code]) -> Set[Word]:
-    return
+    code1 must be a superset the insertion balls of code2,
+    and each word in code1 must be unique.
+    """
+
+    # find the words covered by code2
+    covered = CodeInsertionBall(code2)
+    # add the covered words to code1, so that they would be duplicates
+    code3 = np.append(code1, covered, axis=0)
+
+    unique, counts = np.unique(code3, return_counts=True, axis=0)
+    # identify which elements are unique despite the append, those are not covered
+    return unique[counts == 1]
 
 # get words not covered by VT0, and those not covered by both VT0 and VT((n+1)/2)
 # and compare the sizes

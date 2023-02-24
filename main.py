@@ -14,16 +14,16 @@ def compute_syndrome(code: Code) -> Word:
     n = code.shape[1]
     return np.mod(np.sum((1+np.arange(n))*code, axis=1),n+1)
 
-def VTCodeGenerator(a: int, n: int) -> Code:
+def get_VT_code(a: int, n: int) -> Code:
     """
     return a list of every word in the code VT_a(n)
     """
-    all_words = AllWords(n)
+    all_words = get_all_words(n)
     VT_filter = compute_syndrome(all_words) == a
     # returns all words whose syndrome is a (as per the definition)
     return all_words[VT_filter]
 
-def AllWords(n: int) -> Code:
+def get_all_words(n: int) -> Code:
     """
     return every word of length n
     """
@@ -32,7 +32,7 @@ def AllWords(n: int) -> Code:
     array = np.fromiter(flattened, dtype=np.uint8, count=(n*2**n))
     return array.reshape(-1, n)
 
-def CodeInsertionBall(code: Code) -> Code:
+def find_code_insertion_ball(code: Code) -> Code:
     """
     compute the insertion ball for each word in the code,
     i.e. words that are created by inserting a single bit,
@@ -73,7 +73,7 @@ def CodeInsertionBall(code: Code) -> Code:
     # deduplicate the above words and return the resulting code
     return np.unique(duplicated, axis=0)
 
-def getWordsNotCovered(code1: Code, code2: Code) -> Code:
+def find_words_not_covered(code1: Code, code2: Code) -> Code:
     """
     find all words in code1, which are not covered by insertion balls in code2.
 
@@ -82,7 +82,7 @@ def getWordsNotCovered(code1: Code, code2: Code) -> Code:
     """
 
     # find the words covered by code2
-    covered = CodeInsertionBall(code2)
+    covered = find_code_insertion_ball(code2)
     # add the covered words to code1, so that they would be duplicates
     code3 = np.append(code1, covered, axis=0)
 

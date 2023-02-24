@@ -3,10 +3,9 @@ import numpy as np
 from numpy.typing import NDArray
 import itertools
 
-Word = NDArray[np.uint8] # 1 dimentional binary array
-Code = NDArray[np.uint8] # 2 dimentional binary array, representing multiple words
-
-# NIV
+Word = NDArray[np.uint8]    # 1 dimentional binary array
+Code = NDArray[np.uint8]    # 2 dimentional binary array,
+                            # where each row represents a word in the code
 
 def compute_syndrome(code: Code) -> Word:
     """

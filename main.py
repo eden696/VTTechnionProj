@@ -91,3 +91,17 @@ def find_words_not_covered(code1: Code, code2: Code) -> Code:
 
 # get words not covered by VT0, and those not covered by both VT0 and VT((n+1)/2)
 # and compare the sizes
+
+n = 5
+
+all_words_n = get_all_words(n)
+syndrome = compute_syndrome(all_words_n)
+
+VTx_filter = np.logical_or(syndrome == 0, syndrome == ((n+1) // 2))
+VT0_filter = syndrome == 0
+
+result_VTx = find_words_not_covered(get_all_words(n+1),  all_words_n[VTx_filter])
+result_VT0 = find_words_not_covered(get_all_words(n+1),  all_words_n[VT0_filter])
+
+print(f"the words not covered by both VT0 and VT(n+1)/2 are {result_VTx}")
+print(f"the words not covered by just VT0 are {result_VT0}")

@@ -32,12 +32,29 @@ def AllWords(n: int) -> Code:
     flattened = itertools.chain.from_iterable(all_combinations)
     array = np.fromiter(flattened, dtype=np.uint8, count=(n*2**n))
     return array.reshape(-1, n)
-# EDEN
 
 # return every word in the insertion in the insertion ball of `word`.
 # i.e. words that are created by inserting a single bit.
-def WordInsertionBall(word: Word) -> Set[Word]:
-    return
+def WordInsertionBall(word: Word) -> Code:
+    length = word.size
+    # insert the inverse of word at idx before idx
+    inv_word = 1 - word
+    # except at the end where both 0 and 1 can be appended
+    appended = [0,1]
+    values = np.append(inv_word, [0 , 1])
+
+    extra_length = length + len(appended)
+    # create enough copies for each insertion
+    # reshape word so that it gets repeated, and not its elements
+    repeated = np.repeat(word.reshape((-1, length)), extra_length, axis=0)
+
+    # insert flattens the array unless axis is specified,
+    # to allow for non-uniform insertions
+    indicies = (np.arange(extra_length)*length) + np.arange(extra_length)
+    # the last index is to the same position as the last instead of increasing
+    indicies[-1] = indicies[-1] - 1
+    flattened = np.insert(repeated, indicies, values)
+    return flattened.reshape(-1, length+1)
 
 # get the insertion ball of all words in the code togather
 def CodeInsertionBall(code: List[Word]) -> Set[Word]:

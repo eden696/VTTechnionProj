@@ -1,7 +1,8 @@
-from typing import *
+from typing import List, Set
 import numpy as np
+from numpy.typing import NDArray
 
-CodeWord = np.ndarray
+CodeWord = NDArray[np.int_]
 Code = List[CodeWord]
 
 # NIV

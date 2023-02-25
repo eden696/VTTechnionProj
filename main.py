@@ -2,12 +2,30 @@ import numpy as np
 from numpy.typing import NDArray
 import itertools
 import sys
+import sympy
 
 Word = NDArray[np.uint8]    # 1 dimentional binary array
 Code = NDArray[np.uint8]    # 2 dimentional binary array,
                             # where each row represents a word in the code
 
 np.set_printoptions(threshold=sys.maxsize)
+
+from sympy.ntheory.factor_ import totient
+from sympy.ntheory import mobius
+
+from sympy import gcd
+
+def calc_VT_size(a: int, n: int) -> int:
+    sum_ = 0
+    for d in [x for x in range(1, n+2, 2) if ((n+1) % x == 0)]:
+        #print(f"d: {d}")
+        exp = 2**((n+1)//d)
+        gcd_ = d//gcd(d, a)
+        expr = totient(d)*mobius(gcd_)//totient(gcd_)
+        sum_ += exp*expr
+
+        #print(gcd_)
+    return sum_//(2*(n+1))
 
 def compute_syndrome(code: Code) -> Word:
     """

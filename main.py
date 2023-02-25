@@ -1,10 +1,13 @@
 import numpy as np
 from numpy.typing import NDArray
 import itertools
+import sys
 
 Word = NDArray[np.uint8]    # 1 dimentional binary array
 Code = NDArray[np.uint8]    # 2 dimentional binary array,
                             # where each row represents a word in the code
+
+np.set_printoptions(threshold=sys.maxsize)
 
 def compute_syndrome(code: Code) -> Word:
     """

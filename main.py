@@ -115,6 +115,18 @@ def find_words_not_covered(code1: Code, code2: Code) -> Code:
     # identify which elements are unique despite the append, those are not covered
     return unique[counts == 1]
 
+def unique_per_word(code: Code) -> Word:
+    """
+    return a flattened array,
+    where each element in a word appears once per word.
+
+    elements must be sorted per word
+    """
+    flattened = code.reshape(-1)
+    selection = np.ones(flattened.size, dtype=np.bool_)
+    selection[1:] = flattened[1:] != flattened[:-1]
+    return flattened[selection]
+
 # get words not covered by VT0, and those not covered by both VT0 and VT((n+1)/2)
 # and compare the sizes
 

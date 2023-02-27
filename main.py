@@ -187,14 +187,24 @@ def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
         code = find_words_not_covered(all_words_np,  all_words_n[VT_filter])
     return np.array(cosets), np.array(counts)
 
-n = 5
+n = 10
 cosets, added = collect_coset_coverage(n)
 
-VT_count = np.arange(cosets.size)
+VT_count = np.arange(cosets.size, dtype=np.int_)
 remaining = 2**(n+1) - np.cumsum(added)
+#percentage = (added)/(2**(n+1))
 
-plt.plot(VT_count, remaining, 'b-', label='remaining words')
+plt.plot(VT_count, remaining, 'b', label='remaining words')
+plt.bar(VT_count, remaining, color='maroon', width = 0.4, label='remaining words')
 plt.title('words uncovered by VT codes')
 plt.xlabel('Num of VT codes')
 plt.ylabel('remaining uncovered words')
 plt.show()
+
+
+
+'''
+for each n well want to :
+1. the reminder from the n+1 words space.
+2. the percentage added by each VT code 
+'''

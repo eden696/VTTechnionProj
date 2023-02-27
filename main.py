@@ -187,19 +187,28 @@ def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
         code = find_words_not_covered(all_words_np,  all_words_n[VT_filter])
     return np.array(cosets), np.array(counts)
 
-n = 10
-cosets, added = collect_coset_coverage(n)
+for n in range(3,17):
+    cosets, added = collect_coset_coverage(n)
 
-VT_count = np.arange(cosets.size, dtype=np.int_)
-remaining = 2**(n+1) - np.cumsum(added)
-#percentage = (added)/(2**(n+1))
+    VT_count = np.arange(cosets.size, dtype=np.int_)
+    remaining = 2**(n+1) - np.cumsum(added)
+    percentage = (added)/(2**(n+1))
 
-plt.plot(VT_count, remaining, 'b', label='remaining words')
-plt.bar(VT_count, remaining, color='maroon', width = 0.4, label='remaining words')
-plt.title('words uncovered by VT codes')
-plt.xlabel('Num of VT codes')
-plt.ylabel('remaining uncovered words')
-plt.show()
+    plt.plot(VT_count, remaining, 'b')
+    plt.bar(VT_count, remaining, color='maroon', width = 0.4)
+    plt.title(f'words uncovered by VT codes for n={n}')
+    plt.xlabel('Num of VT codes')
+    plt.ylabel('remaining uncovered words')
+    plt.savefig(f'RemainingWordsFor{n}.png')
+    plt.clf()
+
+    plt.plot(VT_count, percentage, 'b')
+    plt.bar(VT_count, percentage, color='maroon', width=0.4)
+    plt.title(f'Parentage of words covered by added VT codes for n={n}')
+    plt.xlabel('Num of VT codes')
+    plt.ylabel('Parentage of words covered')
+    plt.savefig(f'ParentageWordsFor{n}.png')
+    plt.clf()
 
 
 

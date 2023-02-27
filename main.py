@@ -187,13 +187,10 @@ def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
         code = find_words_not_covered(all_words_np,  all_words_n[VT_filter])
     return np.array(cosets), np.array(counts)
 
-for n in range(3,17):
-    cosets, added = collect_coset_coverage(n)
-
+def creat_graphs_remaining_VT_count(n, cosets, added):
     VT_count = np.arange(cosets.size, dtype=np.int_)
     remaining = 2**(n+1) - np.cumsum(added)
-    percentage = (added)/(2**(n+1))
-
+    plt.xticks(VT_count)
     plt.plot(VT_count, remaining, 'b')
     plt.bar(VT_count, remaining, color='maroon', width = 0.4)
     plt.title(f'words uncovered by VT codes for n={n}')
@@ -202,6 +199,10 @@ for n in range(3,17):
     plt.savefig(f'RemainingWordsFor{n}.png')
     plt.clf()
 
+def creat_graphs_percentage_VT_count(n, cosets, added):
+    VT_count = np.arange(cosets.size, dtype=np.int_)
+    percentage = (added) / (2 ** (n + 1))
+    plt.xticks(VT_count)
     plt.plot(VT_count, percentage, 'b')
     plt.bar(VT_count, percentage, color='maroon', width=0.4)
     plt.title(f'Parentage of words covered by added VT codes for n={n}')
@@ -209,6 +210,38 @@ for n in range(3,17):
     plt.ylabel('Parentage of words covered')
     plt.savefig(f'ParentageWordsFor{n}.png')
     plt.clf()
+
+def creat_graphs_remaining_forward_VT(n, cosets, added):
+    remaining = 2**(n+1) - np.cumsum(added)
+    plt.xticks(cosets)
+    plt.plot(cosets, remaining, 'b')
+    plt.bar(cosets, remaining, color='maroon', width = 0.4)
+    plt.title(f'words uncovered by each VT codes for n={n}')
+    plt.xlabel('VT codes added')
+    plt.ylabel('remaining uncovered words')
+    plt.savefig(f'RemainingWordsFor{n}_ForwardVT.png')
+    plt.clf()
+
+def creat_graphs_percentage_forward_VT(n, cosets, added):
+    percentage = (added) / (2 ** (n + 1))
+    plt.xticks(cosets)
+    plt.plot(cosets, percentage, 'b')
+    plt.bar(cosets, percentage, color='maroon', width=0.4)
+    plt.title(f'Parentage of words covered by each VT codes for n={n}')
+    plt.xlabel('VT codes added')
+    plt.ylabel('Parentage of words covered')
+    plt.savefig(f'ParentageWordsFor{n}_ForwardVT.png')
+    plt.clf()
+
+
+for n in range(3,17):
+    cosets, added = collect_coset_coverage(n)
+
+    #creat_graphs_percentage_VT_count(n, cosets, added)
+    #creat_graphs_percentage_VT_count(n, cosets, added)
+    creat_graphs_percentage_forward_VT(n, cosets, added)
+    creat_graphs_remaining_forward_VT(n, cosets, added)
+
 
 
 

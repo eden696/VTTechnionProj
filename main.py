@@ -161,24 +161,26 @@ def find_best_coverage(code: Code) -> Tuple[int, int]:
     max_coset_idx = np.argmax(counts)
     return coset[max_coset_idx], counts[max_coset_idx]
 
-# get words not covered by VT0, and those not covered by both VT0 and VT((n+1)/2)
-# and compare the sizes
+def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
+    """
+    returns the cosets used during the greedy algorithm,
+    and the number of additional words covered in each round
+    """
 
-n = 14
-code = get_all_words(n+1)
-all_words_np = get_all_words(n+1)
-all_words_n = get_all_words(n)
-syndromes = compute_syndrome(all_words_n)
+    code = get_all_words(n+1)
+    all_words_np = get_all_words(n+1)
+    all_words_n = get_all_words(n)
+    syndromes = compute_syndrome(all_words_n)
+    cosets = []
+    counts = []
 
-cosets = []
+    while code.size > 0:
+        coset, count = find_best_coverage(code)
+        cosets = cosets + [coset]
+        counts = counts + [count]
+        VT_filter = np.zeros_like(syndromes)
+        for a in cosets:
+            VT_filter = np.logical_or(VT_filter, syndromes == a)
 
-while code.size > 0:
-    coset, count = find_best_coverage(code)
-    print(f"the best coset is {coset}, which covers {count} new words")
-    cosets = cosets + [coset]
-    VT_filter = np.zeros_like(syndromes)
-    for a in cosets:
-        VT_filter = np.logical_or(VT_filter, syndromes == a)
-
-    VT_codes = all_words_n[VT_filter]
-    code = find_words_not_covered(all_words_np,  all_words_n[VT_filter])
+        code = find_words_not_covered(all_words_np,  all_words_n[VT_filter])
+    return np.array(cosets), np.array(counts)

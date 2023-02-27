@@ -4,6 +4,8 @@ import itertools
 import sys
 from typing import Tuple
 
+import matplotlib.pyplot as plt
+
 Word = NDArray[np.uint8]    # 1 dimentional binary array
 Code = NDArray[np.uint8]    # 2 dimentional binary array,
                             # where each row represents a word in the code
@@ -184,3 +186,15 @@ def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
 
         code = find_words_not_covered(all_words_np,  all_words_n[VT_filter])
     return np.array(cosets), np.array(counts)
+
+n = 5
+cosets, added = collect_coset_coverage(n)
+
+VT_count = np.arange(cosets.size)
+remaining = 2**(n+1) - np.cumsum(added)
+
+plt.plot(VT_count, remaining, 'b-', label='remaining words')
+plt.title('words uncovered by VT codes')
+plt.xlabel('Num of VT codes')
+plt.ylabel('remaining uncovered words')
+plt.show()

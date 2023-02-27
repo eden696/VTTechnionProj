@@ -2,7 +2,7 @@ import numpy as np
 from numpy.typing import NDArray
 import itertools
 import sys
-import sympy
+from typing import Tuple
 
 Word = NDArray[np.uint8]    # 1 dimentional binary array
 Code = NDArray[np.uint8]    # 2 dimentional binary array,
@@ -149,24 +149,36 @@ def unique_per_word(code: Code) -> Word:
     selection[np.arange(word_count)*length] = True
     return flattened[selection]
 
+def find_best_coverage(code: Code) -> Tuple[int, int]:
+    """
+    returns the a value of the VT_a(n) code,
+    covering the most words in the given code,
+    and the number of words covered
+    """
+    deletion_syndromes = find_code_deletion_ball_syndromes(code)
+    dedup_per_word = unique_per_word(deletion_syndromes)
+    coset, counts = np.unique(dedup_per_word, return_counts=True)
+    max_coset_idx = np.argmax(counts)
+    return coset[max_coset_idx], counts[max_coset_idx]
+
 # get words not covered by VT0, and those not covered by both VT0 and VT((n+1)/2)
 # and compare the sizes
 
-n = 8
-
-all_words_n = get_all_words(n)
+n = 14
+code = get_all_words(n+1)
 all_words_np = get_all_words(n+1)
-syndrome = compute_syndrome(all_words_n)
+all_words_n = get_all_words(n)
+syndromes = compute_syndrome(all_words_n)
 
-VTx_filter = np.logical_or(np.logical_or(syndrome == 0, syndrome == 3), syndrome == 6)
-VT0_filter = syndrome == 0
+cosets = []
 
-result_VTx = find_words_not_covered(all_words_np,  all_words_n[VTx_filter])
-result_VT0 = find_words_not_covered(all_words_np,  all_words_n[VT0_filter])
+while code.size > 0:
+    coset, count = find_best_coverage(code)
+    print(f"the best coset is {coset}, which covers {count} new words")
+    cosets = cosets + [coset]
+    VT_filter = np.zeros_like(syndromes)
+    for a in cosets:
+        VT_filter = np.logical_or(VT_filter, syndromes == a)
 
-#print(f"the words not covered by both VT0 and VT(n+1)/2 are {result_VTx}")
-x = find_code_deletion_ball_syndromes(result_VTx)
-
-uniques = unique_per_word(x)
-u,c = np.unique(uniques, return_counts=True)
-print(f"elements: {u}, counts: {c}")
+    VT_codes = all_words_n[VT_filter]
+    code = find_words_not_covered(all_words_np,  all_words_n[VT_filter])

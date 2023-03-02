@@ -162,6 +162,19 @@ def find_best_coverage(code: Code) -> Tuple[int, int]:
     coset, counts = np.unique(dedup_per_word, return_counts=True)
     max_coset_idx = np.argmax(counts)
     return coset[max_coset_idx], counts[max_coset_idx]
+def find_coverages(code: Code)-> Code :
+    '''
+    :param code: the word not covered from n+1 length.
+    :return:  (the syndrome, the counts off words in insertion ball related to those syndromes )
+    '''
+    deletion_syndromes = find_code_deletion_ball_syndromes(code)
+    dedup_per_word = unique_per_word(deletion_syndromes)
+    coset, counts = np.unique(dedup_per_word, return_counts=True)
+    coset = coset.reshape((1, -1))
+    counts = counts.reshape((1, -1))
+    return np.append(coset, counts, axis=0)
+
+
 
 def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
     """
@@ -185,6 +198,9 @@ def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
             VT_filter = np.logical_or(VT_filter, syndromes == a)
 
         code = find_words_not_covered(all_words_np,  all_words_n[VT_filter])
+        if (code.size != 0):
+            print(f"for coset choise : {coset}")
+            print(find_coverages(np.array(code)))
     return np.array(cosets), np.array(counts)
 
 def creat_graphs_remaining_VT_count(n, cosets, added):
@@ -235,12 +251,13 @@ def creat_graphs_percentage_forward_VT(n, cosets, added):
 
 
 for n in range(3,17):
+    print (f" for n = {n}")
     cosets, added = collect_coset_coverage(n)
 
     #creat_graphs_percentage_VT_count(n, cosets, added)
     #creat_graphs_percentage_VT_count(n, cosets, added)
-    creat_graphs_percentage_forward_VT(n, cosets, added)
-    creat_graphs_remaining_forward_VT(n, cosets, added)
+    #creat_graphs_percentage_forward_VT(n, cosets, added)
+    #creat_graphs_remaining_forward_VT(n, cosets, added)
 
 
 

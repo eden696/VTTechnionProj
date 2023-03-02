@@ -2,7 +2,7 @@ import numpy as np
 from numpy.typing import NDArray
 import itertools
 import sys
-from typing import Tuple
+from typing import List, Tuple
 from sympy.ntheory.factor_ import totient
 from sympy.ntheory import mobius
 from sympy import gcd
@@ -74,6 +74,29 @@ def unique_per_word(code: Code) -> Word:
     # ensure duplicates are not deleted accross word boundaries
     selection[np.arange(word_count)*length] = True
     return flattened[selection]
+
+def get_coverage_per_VT(code: Code, exclude: List=[]) -> NDArray[np.int_]:
+    """
+    count the number of words in the code, which are covered by each VT code,
+    and place the number of VTa(n) at index a
+
+    does not count words covered by syndromes in the exclude list
+    """
+    n = code.shape[1]
+    total_counts = np.zeros(n, dtype=np.int_)
+
+    # find the syndromes of words in the deletion ball of each word
+    syndromes = find_code_deletion_ball_syndromes(code)
+
+    # remove words where one of the syndromes is in the excluded list
+    exclution_filter = np.all(np.isin(syndromes, np.array(exclude), invert=True), axis=1)
+    filtered_syndromes = syndromes[exclution_filter]
+
+    # count the number of instances per word and add to the total
+    cosets, counts = np.unique(unique_per_word(filtered_syndromes), return_counts=True)
+    total_counts[cosets] += counts
+
+    return total_counts
 
 def get_VT_code(a: int, n: int) -> Code:
     """

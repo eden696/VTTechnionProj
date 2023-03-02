@@ -59,6 +59,22 @@ def find_code_deletion_ball_syndromes(code: Code) -> Code:
     # sort values for visual clarity
     return np.sort(syndromes, axis=1)
 
+def unique_per_word(code: Code) -> Word:
+    """
+    return a flattened array,
+    where each element in a word appears once per word.
+
+    elements must be sorted per word
+    """
+    length = code.shape[1]
+    word_count = code.shape[0]
+    flattened = code.reshape(-1)
+    selection = np.ones(flattened.size, dtype=np.bool_)
+    selection[1:] = flattened[1:] != flattened[:-1]
+    # ensure duplicates are not deleted accross word boundaries
+    selection[np.arange(word_count)*length] = True
+    return flattened[selection]
+
 def get_VT_code(a: int, n: int) -> Code:
     """
     return a list of every word in the code VT_a(n)
@@ -134,22 +150,6 @@ def find_words_not_covered(code1: Code, code2: Code) -> Code:
     unique, counts = np.unique(code3, return_counts=True, axis=0)
     # identify which elements are unique despite the append, those are not covered
     return unique[counts == 1]
-
-def unique_per_word(code: Code) -> Word:
-    """
-    return a flattened array,
-    where each element in a word appears once per word.
-
-    elements must be sorted per word
-    """
-    length = code.shape[1]
-    word_count = code.shape[0]
-    flattened = code.reshape(-1)
-    selection = np.ones(flattened.size, dtype=np.bool_)
-    selection[1:] = flattened[1:] != flattened[:-1]
-    # ensure duplicates are not deleted accross word boundaries
-    selection[np.arange(word_count)*length] = True
-    return flattened[selection]
 
 def find_best_coverage(code: Code) -> Tuple[int, int]:
     """

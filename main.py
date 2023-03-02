@@ -3,7 +3,9 @@ from numpy.typing import NDArray
 import itertools
 import sys
 from typing import Tuple
-
+from sympy.ntheory.factor_ import totient
+from sympy.ntheory import mobius
+from sympy import gcd
 import matplotlib.pyplot as plt
 
 Word = NDArray[np.uint8]    # 1 dimentional binary array
@@ -12,10 +14,6 @@ Code = NDArray[np.uint8]    # 2 dimentional binary array,
 
 np.set_printoptions(threshold=sys.maxsize)
 
-from sympy.ntheory.factor_ import totient
-from sympy.ntheory import mobius
-
-from sympy import gcd
 
 def calc_VT_size(a: int, n: int) -> int:
     sum_ = 0

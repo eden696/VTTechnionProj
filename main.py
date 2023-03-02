@@ -67,6 +67,8 @@ def unique_per_word(code: Code) -> Word:
     length = code.shape[1]
     word_count = code.shape[0]
     flattened = code.reshape(-1)
+    # select only elements whose neighbor is not identical to them
+    # this reduces every run of a single element into just that element
     selection = np.ones(flattened.size, dtype=np.bool_)
     selection[1:] = flattened[1:] != flattened[:-1]
     # ensure duplicates are not deleted accross word boundaries

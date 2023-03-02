@@ -165,18 +165,6 @@ def find_words_not_covered(code1: Code, code2: Code) -> Code:
     # identify which elements are unique despite the append, those are not covered
     return unique[counts == 1]
 
-def find_best_coverage(code: Code) -> Tuple[int, int]:
-    """
-    returns the a value of the VT_a(n) code,
-    covering the most words in the given code,
-    and the number of words covered
-    """
-    deletion_syndromes = find_code_deletion_ball_syndromes(code)
-    dedup_per_word = unique_per_word(deletion_syndromes)
-    coset, counts = np.unique(dedup_per_word, return_counts=True)
-    max_coset_idx = np.argmax(counts)
-    return coset[max_coset_idx], counts[max_coset_idx]
-
 def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
     """
     returns the cosets used during the greedy algorithm,

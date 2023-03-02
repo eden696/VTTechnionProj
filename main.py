@@ -98,15 +98,6 @@ def get_coverage_per_VT(code: Code, exclude: List=[]) -> NDArray[np.int_]:
 
     return total_counts
 
-def get_VT_code(a: int, n: int) -> Code:
-    """
-    return a list of every word in the code VT_a(n)
-    """
-    all_words = get_all_words(n)
-    VT_filter = compute_syndrome(all_words) == a
-    # returns all words whose syndrome is a (as per the definition)
-    return all_words[VT_filter]
-
 def get_all_words(n: int) -> Code:
     """
     return every word of length n

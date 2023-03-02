@@ -188,33 +188,28 @@ def find_coverages(code: Code)-> Code :
     counts = counts.reshape((1, -1))
     return np.append(coset, counts, axis=0)
 
-
-
 def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
     """
     returns the cosets used during the greedy algorithm,
     and the number of additional words covered in each round
     """
 
-    code = get_all_words(n+1)
     all_words_np = get_all_words(n+1)
-    all_words_n = get_all_words(n)
-    syndromes = compute_syndrome(all_words_n)
     cosets = []
     counts = []
 
-    while code.size > 0:
-        coset, count = find_best_coverage(code)
-        cosets = cosets + [coset]
-        counts = counts + [count]
-        VT_filter = np.zeros_like(syndromes)
-        for a in cosets:
-            VT_filter = np.logical_or(VT_filter, syndromes == a)
+    while True:
+        coverage_per_VT = get_coverage_per_VT(all_words_np, cosets)
 
-        code = find_words_not_covered(all_words_np,  all_words_n[VT_filter])
-        if (code.size != 0):
-            print(f"for coset choise : {coset}")
-            print(find_coverages(np.array(code)))
+        next_coset = np.argmax(coverage_per_VT)
+        next_count = coverage_per_VT[next_coset]
+
+        if next_count <= 0:
+            break
+
+        cosets += [next_coset]
+        counts += [coverage_per_VT[next_coset]]
+
     return np.array(cosets), np.array(counts)
 
 def creat_graphs_remaining_VT_count(n, cosets, added):

@@ -176,17 +176,6 @@ def find_best_coverage(code: Code) -> Tuple[int, int]:
     coset, counts = np.unique(dedup_per_word, return_counts=True)
     max_coset_idx = np.argmax(counts)
     return coset[max_coset_idx], counts[max_coset_idx]
-def find_coverages(code: Code)-> Code :
-    '''
-    :param code: the word not covered from n+1 length.
-    :return:  (the syndrome, the counts off words in insertion ball related to those syndromes )
-    '''
-    deletion_syndromes = find_code_deletion_ball_syndromes(code)
-    dedup_per_word = unique_per_word(deletion_syndromes)
-    coset, counts = np.unique(dedup_per_word, return_counts=True)
-    coset = coset.reshape((1, -1))
-    counts = counts.reshape((1, -1))
-    return np.append(coset, counts, axis=0)
 
 def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
     """

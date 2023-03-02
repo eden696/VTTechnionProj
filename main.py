@@ -130,7 +130,7 @@ def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
 
     return np.array(cosets), np.array(counts)
 
-def creat_graphs_remaining_VT_count(n, cosets, added):
+def create_graphs_remaining_VT_count(n, cosets, added):
     VT_count = np.arange(cosets.size, dtype=np.int_)
     remaining = 2**(n+1) - np.cumsum(added)
     plt.xticks(VT_count)
@@ -142,7 +142,7 @@ def creat_graphs_remaining_VT_count(n, cosets, added):
     plt.savefig(f'RemainingWordsFor{n}.png')
     plt.clf()
 
-def creat_graphs_percentage_VT_count(n, cosets, added):
+def create_graphs_percentage_VT_count(n, cosets, added):
     VT_count = np.arange(cosets.size, dtype=np.int_)
     percentage = (added) / (2 ** (n + 1))
     plt.xticks(VT_count)
@@ -154,7 +154,7 @@ def creat_graphs_percentage_VT_count(n, cosets, added):
     plt.savefig(f'ParentageWordsFor{n}.png')
     plt.clf()
 
-def creat_graphs_remaining_forward_VT(n, cosets, added):
+def create_graphs_remaining_forward_VT(n, cosets, added):
     remaining = 2**(n+1) - np.cumsum(added)
     plt.xticks(cosets)
     plt.plot(cosets, remaining, 'b')
@@ -165,7 +165,7 @@ def creat_graphs_remaining_forward_VT(n, cosets, added):
     plt.savefig(f'RemainingWordsFor{n}_ForwardVT.png')
     plt.clf()
 
-def creat_graphs_percentage_forward_VT(n, cosets, added):
+def create_graphs_percentage_forward_VT(n, cosets, added):
     percentage = (added) / (2 ** (n + 1))
     plt.xticks(cosets)
     plt.plot(cosets, percentage, 'b')

@@ -36,6 +36,29 @@ def compute_syndrome(code: Code) -> Word:
     n = code.shape[1]
     return np.mod(np.sum((1+np.arange(n))*code, axis=1),n+1)
 
+def find_code_deletion_ball_syndromes(code: Code) -> Code:
+    """
+    compute the syndromes of deletion ball for each word in the code,
+    i.e. words that are created by removing a single bit
+    """
+    length = code.shape[1]
+    word_count = code.shape[0]
+    indicies = np.arange(length)*length + np.arange(length)
+
+    # create n instances of each word,
+    # so that the deletions can be done independantly for each one
+    repeated = np.repeat(code, length, axis=0)
+    # flatten all instances of each word,
+    # so that insertions can be performed on uniform indicies
+    flattened = repeated.reshape((word_count, -1))
+
+    deleted = np.delete(flattened, indicies, axis=1).reshape((-1, length-1))
+
+    # get the all of the syndromes for each word
+    syndromes = compute_syndrome(deleted).reshape((word_count, -1))
+    # sort values for visual clarity
+    return np.sort(syndromes, axis=1)
+
 def get_VT_code(a: int, n: int) -> Code:
     """
     return a list of every word in the code VT_a(n)
@@ -94,29 +117,6 @@ def find_code_insertion_ball(code: Code) -> Code:
 
     # deduplicate the above words and return the resulting code
     return np.unique(duplicated, axis=0)
-
-def find_code_deletion_ball_syndromes(code: Code) -> Code:
-    """
-    compute the syndromes of deletion ball for each word in the code,
-    i.e. words that are created by removing a single bit
-    """
-    length = code.shape[1]
-    word_count = code.shape[0]
-    indicies = np.arange(length)*length + np.arange(length)
-
-    # create n instances of each word,
-    # so that the deletions can be done independantly for each one
-    repeated = np.repeat(code, length, axis=0)
-    # flatten all instances of each word,
-    # so that insertions can be performed on uniform indicies
-    flattened = repeated.reshape((word_count, -1))
-
-    deleted = np.delete(flattened, indicies, axis=1).reshape((-1, length-1))
-
-    # get the all of the syndromes for each word
-    syndromes = compute_syndrome(deleted).reshape((word_count, -1))
-    # sort values for visual clarity
-    return np.sort(syndromes, axis=1)
 
 def find_words_not_covered(code1: Code, code2: Code) -> Code:
     """

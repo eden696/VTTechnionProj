@@ -17,14 +17,13 @@ np.set_printoptions(threshold=sys.maxsize)
 
 def calc_VT_size(a: int, n: int) -> int:
     sum_ = 0
+
     for d in [x for x in range(1, n+2, 2) if ((n+1) % x == 0)]:
-        #print(f"d: {d}")
         exp = 2**((n+1)//d)
         gcd_ = d//gcd(d, a)
         expr = totient(d)*mobius(gcd_)//totient(gcd_)
         sum_ += exp*expr
 
-        #print(gcd_)
     return sum_//(2*(n+1))
 
 def compute_syndrome(code: Code) -> Word:

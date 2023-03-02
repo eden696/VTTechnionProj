@@ -148,23 +148,6 @@ def find_code_insertion_ball(code: Code) -> Code:
     # deduplicate the above words and return the resulting code
     return np.unique(duplicated, axis=0)
 
-def find_words_not_covered(code1: Code, code2: Code) -> Code:
-    """
-    find all words in code1, which are not covered by insertion balls in code2.
-
-    code1 must be a superset the insertion balls of code2,
-    and each word in code1 must be unique.
-    """
-
-    # find the words covered by code2
-    covered = find_code_insertion_ball(code2)
-    # add the covered words to code1, so that they would be duplicates
-    code3 = np.append(code1, covered, axis=0)
-
-    unique, counts = np.unique(code3, return_counts=True, axis=0)
-    # identify which elements are unique despite the append, those are not covered
-    return unique[counts == 1]
-
 def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
     """
     returns the cosets used during the greedy algorithm,

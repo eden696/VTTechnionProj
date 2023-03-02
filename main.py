@@ -257,22 +257,3 @@ def creat_graphs_percentage_forward_VT(n, cosets, added):
     plt.ylabel('Parentage of words covered')
     plt.savefig(f'ParentageWordsFor{n}_ForwardVT.png')
     plt.clf()
-
-
-for n in range(3,17):
-    print (f" for n = {n}")
-    cosets, added = collect_coset_coverage(n)
-
-    #creat_graphs_percentage_VT_count(n, cosets, added)
-    #creat_graphs_percentage_VT_count(n, cosets, added)
-    #creat_graphs_percentage_forward_VT(n, cosets, added)
-    #creat_graphs_remaining_forward_VT(n, cosets, added)
-
-
-
-
-'''
-for each n well want to :
-1. the reminder from the n+1 words space.
-2. the percentage added by each VT code 
-'''

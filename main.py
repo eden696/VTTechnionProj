@@ -26,6 +26,14 @@ def calc_VT_size(a: int, n: int) -> int:
 
     return sum_//(2*(n+1))
 
+def expected_multi_VT_size(syndromes: List[int], n:int) -> int:
+    S = 0
+    for syndrome in syndromes:
+        VT_size = calc_VT_size(syndrome, n)
+        VT_cover = VT_size*(n+2)
+        S = S + VT_cover - int(S*(VT_cover/2**(n+1)))
+    return S
+
 def compute_syndrome(code: Code) -> Word:
     """
     compute the VT code syndrome for each element in the code

@@ -101,10 +101,7 @@ def get_all_words(n: int) -> Code:
     """
     return every word of length n
     """
-    all_combinations = itertools.product([0, 1], repeat=n)
-    flattened = itertools.chain.from_iterable(all_combinations)
-    array = np.fromiter(flattened, dtype=np.uint8, count=(n*2**n))
-    return array.reshape(-1, n)
+    return np.fromfunction(lambda i, j: (np.bitwise_and(i, 1 << j) != 0).astype(np.uint8), (2**n,n), dtype=np.int_)
 
 def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
     """

@@ -105,6 +105,16 @@ def get_coverage_per_VT(code: Code, exclude: List=[]) -> NDArray[np.int_]:
 
     return total_counts
 
+def get_total_VT_coverage(code: Code, chosen: List[int]=[]) -> int:
+    """
+    returns the number of words in code, covered by the chosen VT codes,
+    specified by the syndrome
+    """
+    syndromes = find_code_deletion_ball_syndromes(code)
+
+    exclusion_filter = np.all(np.isin(syndromes, np.array(chosen), invert=True), axis=1)
+    return code.shape[0] - syndromes[exclusion_filter].shape[0]
+
 def get_all_words(n: int) -> Code:
     """
     return every word of length n

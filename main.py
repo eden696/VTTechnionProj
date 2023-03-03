@@ -183,3 +183,17 @@ def create_graphs_percentage_forward_VT(n, cosets, added):
     plt.ylabel('Parentage of words covered')
     plt.savefig(f'ParentageWordsFor{n}_ForwardVT.png')
     plt.clf()
+
+n = 14
+chosen = [0,3,4,5,11]
+
+print(f"the expected number of words covered by VT{chosen} is {expected_multi_VT_size(chosen, n)}")
+
+
+all_words_np = get_all_words(n+1)
+syndromes = find_code_deletion_ball_syndromes(all_words_np)
+
+exclusion_filter = np.all(np.isin(syndromes, np.array(chosen), invert=True), axis=1)
+actual_multi_VT_size = 2**(n+1) - syndromes[exclusion_filter].shape[0]
+
+print(f"the actual number of words covered by VT{chosen} is {actual_multi_VT_size}")

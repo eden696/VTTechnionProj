@@ -251,11 +251,37 @@ def create_graphs_percentage_forward_VT(n, cosets, added):
     plt.savefig(f'ParentageWordsFor{n}_ForwardVT.png')
     plt.clf()
 
-n = 14
-chosen = [0,3,4,5,11]
+print(count_redundant(0, [4,2], 7))
 
-print(f"the expected number of words covered by VT{chosen} is {expected_multi_VT_size(chosen, n)}")
+"""
+n = 7
+a = 0
 
-actual_multi_VT_size = get_total_VT_coverage(get_all_words(n+1), chosen)
+all_words_n = get_all_words(n)
+syndromes = compute_syndrome(all_words_n)
+VTa_filter = syndromes == a
+VTa_code = all_words_n[VTa_filter]
 
-print(f"the actual number of words covered by VT{chosen} is {actual_multi_VT_size}")
+VTa_insertion_ball = find_code_insertion_ball(VTa_code)
+insertion_ball_syndromes = find_code_deletion_ball_syndromes(VTa_insertion_ball)
+
+ball_per_word = insertion_ball_syndromes
+sorted_ball_per_word = np.sort(ball_per_word, axis=1)
+
+
+
+for arr in np.array_split(sorted_ball_per_word, n+2):
+    chosen_syndromes = []
+    while arr.size > 0:
+        max_syndrome = -1
+        max_count = 0
+        for i in range(1, n+1):
+            u, c = np.unique(unique_per_word(arr) == i, return_counts=True)
+            synd_count = c[u]
+            if (synd_count.size > 0 and max_count < synd_count):
+                max_count = synd_count
+                max_syndrome = i
+        arr = arr[np.all(arr != max_syndrome, axis=1)]
+        chosen_syndromes += [max_syndrome]
+    print(chosen_syndromes)
+"""

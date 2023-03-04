@@ -129,6 +129,8 @@ def find_code_insertion_ball(code: Code) -> Code:
     compute the insertion ball for each word in the code,
     i.e. words that are created by inserting a single bit,
     returning all words in the union of the balls
+
+    every sequence of n+2 words in the code is the insertion ball of a single word
     """
     length = code.shape[1]
     word_count = code.shape[0]
@@ -158,12 +160,8 @@ def find_code_insertion_ball(code: Code) -> Code:
 
     inserted = np.insert(flattened, indicies, values, axis=1)
 
-    # reshape the result of the insertion into words of length n+1,
-    # which can have duplicates across different words in the code
-    duplicated = inserted.reshape((-1, length+1))
-
-    # deduplicate the above words and return the resulting code
-    return np.unique(duplicated, axis=0)
+    # reshape the result of the insertion into words of length n+1
+    return inserted.reshape((-1, length+1))
 
 def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
     """

@@ -187,6 +187,24 @@ def collect_coset_coverage(n: int) -> Tuple[Word, Word]:
 
     return np.array(cosets), np.array(counts)
 
+def count_redundant(new_code: int, existing_codes: List[int], n: int) -> int:
+    """
+    counts the number of words in the VT code with syndrome `new code`,
+    have insertion balls that are covered completely,
+    by the codes with syndromes `existing_codes`
+    """
+    all_words_n = get_all_words(n)
+    syndromes = compute_syndrome(all_words_n)
+    VTa_filter = syndromes == new_code
+    VTa_code = all_words_n[VTa_filter]
+
+    VTa_insertion_ball = find_code_insertion_ball(VTa_code)
+    insertion_ball_syndromes = find_code_deletion_ball_syndromes(VTa_insertion_ball)
+
+    words_covered = np.any(np.isin(insertion_ball_syndromes, np.array(existing_codes)), axis=1)
+    balls_covered = np.all(words_covered.reshape((-1, n+2)), axis=1)
+    return np.count_nonzero(balls_covered)
+
 def create_graphs_remaining_VT_count(n, cosets, added):
     VT_count = np.arange(cosets.size, dtype=np.int_)
     remaining = 2**(n+1) - np.cumsum(added)

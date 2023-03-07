@@ -251,7 +251,20 @@ def create_graphs_percentage_forward_VT(n, cosets, added):
     plt.savefig(f'ParentageWordsFor{n}_ForwardVT.png')
     plt.clf()
 
-print(count_redundant(0, [4,2], 7))
+n = 15
+
+cosets, counts = collect_coset_coverage(n)
+
+cosets_so_far = []
+total_redundant = 0
+for coset in cosets:
+    redundant = count_redundant(coset, cosets_so_far, n)
+    print(f"adding {redundant} redundant words, after {len(cosets_so_far)} VT codes added")
+    total_redundant += redundant
+    cosets_so_far += [coset]
+
+print(f"the overall number of redundant words in {total_redundant}")
+print(f"the total number of words in the code is {calc_VT_size(0, n)*cosets.size}")
 
 """
 n = 7

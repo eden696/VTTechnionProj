@@ -251,6 +251,37 @@ def create_graphs_percentage_forward_VT(n, cosets, added):
     plt.savefig(f'ParentageWordsFor{n}_ForwardVT.png')
     plt.clf()
 
+def create_graphs_covariance(n, a, VT_codes, cov):
+    plt.xticks(VT_codes)
+    plt.bar(VT_codes, cov, color='maroon', width=0.4)
+    plt.title(f'covariance of words covered by each VT codes for n={n} with VT code {a}')
+    plt.xlabel('VT codes')
+    plt.ylabel('covariance')
+    plt.savefig(f'covariance/CovarianceVTcodes_{n}_with_{a}.png')
+    plt.clf()
+
+def calc_covariance(n: int):
+    all_words_np = get_all_words(n+1)
+    syndromes = find_code_deletion_ball_syndromes(all_words_np)
+    VT_codes = np.arange(n+1)
+
+    for a in VT_codes:
+        VTa_ind = np.any(syndromes == a, axis=1).astype(np.float_)
+        VTa_mean = np.mean(VTa_ind)
+        VTa_normal = VTa_ind - VTa_mean
+
+        VT_codes_sans_a = np.delete(VT_codes, a)
+        cov = np.zeros_like(VT_codes_sans_a, dtype=np.float_)
+
+        for i, b in enumerate(VT_codes_sans_a):
+            VTb_ind = np.any(syndromes == b, axis=1).astype(np.float_)
+            VTb_mean = np.mean(VTb_ind)
+            VTb_normal = VTb_ind - VTb_mean
+
+            cov[i] = np.mean(VTa_normal*VTb_normal)
+
+        create_graphs_covariance(n, a, VT_codes_sans_a, cov)
+
 n = 15
 
 cosets, counts = collect_coset_coverage(n)

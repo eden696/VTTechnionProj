@@ -1,3 +1,4 @@
+import numpy
 import numpy as np
 from numpy.typing import NDArray
 import itertools
@@ -292,33 +293,48 @@ def count_intersection_size(n: int, a: int, b: int) -> int:
 def calculated_expected_intersection_sizes(ns: NDArray) -> NDArray[np.int_]:
     expected_values = np.left_shift(1, ns - 1)
 
-    for i in range(3, num_n+1):
+    for i in range(3, ns.size):
         expected_values[i] += calc_VT_size(0, i)
 
     return expected_values
 
+def create_intersection_size_under_independence(ns: NDArray) -> NDArray:
+    expected_values = np.left_shift(1, ns+1)
+    for i in range(3, ns.size):
+        expected_values[i] *= (calc_VT_size(0, i)*calc_VT_size(1, i))*((i+2)**2)
+        expected_values[i] //= (2**(i+1))**2
+    return expected_values
 
-def create_expected_vs_computed_graph(ns: NDArray, expected_values: NDArray, computed_values: NDArray):
+def create_expected_vs_computed_graph(ns: NDArray, expected_values: NDArray, computed_values: NDArray, independence_values: NDArray):
     plt.xticks(ns[3:])
     plt.plot(ns[3:], expected_values[3:], 'b', label="expected values")
     plt.plot(ns[3:], computed_values[3:], 'g', label="computed values")
+    plt.plot(ns[3:], independence_values[3:], 'r', label="independence values")
     plt.yscale('log')
     plt.title(f'VT codes intersection size expected VS computed (log scale)')
     plt.xlabel('length of words')
     plt.ylabel('intersection size')
     plt.legend(title='')
-    plt.savefig(f'figures_intersection_size.png')
+    plt.savefig(f'figures_intersection_size(expected,computed,independence).png')
     plt.clf()
 
-num_n = 21
+num_n = 20
 ns = np.arange(num_n+1, dtype=np.int_)
 expected_values = calculated_expected_intersection_sizes(ns)
 computed_values = np.zeros_like(ns)
+independence_values = create_intersection_size_under_independence(ns)
 for i in range(3, ns.size):
     computed_values[i] = count_intersection_size(i, 0, 1)
 
-create_expected_vs_computed_graph(ns, expected_values, computed_values)
+create_expected_vs_computed_graph(ns, expected_values, computed_values, independence_values)
 
+print("for code woeds length of 3 to 20 we got:")
+print(f'The computed values are{computed_values}')
+print(f'The expected values are{expected_values}')
+print(f'The independence values are{independence_values}')
+numpy.savetxt("computed_values.csv", computed_values, fmt='%d', delimiter=",")
+numpy.savetxt("expected_values.csv", expected_values, fmt='%d', delimiter=",")
+numpy.savetxt("independence_values.csv", independence_values, fmt='%d', delimiter=",")
 """
 n = 7
 a = 0

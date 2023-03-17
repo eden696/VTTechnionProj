@@ -282,20 +282,20 @@ def calc_covariance(n: int):
 
         create_graphs_covariance(n, a, VT_codes_sans_a, cov)
 
-n = 15
+def count_intersection_size(n: int, a: int, b: int) -> int:
+    all_words_np = get_all_words(n+1)
+    syndromes = find_code_deletion_ball_syndromes(all_words_np)
+    VT_filter = np.logical_and(np.any(syndromes == a, axis=1), np.any(syndromes == b, axis=1))
+    u, c = np.unique(VT_filter, return_counts=True)
+    return c[u]
 
-cosets, counts = collect_coset_coverage(n)
 
-cosets_so_far = []
-total_redundant = 0
-for coset in cosets:
-    redundant = count_redundant(coset, cosets_so_far, n)
-    print(f"adding {redundant} redundant words, after {len(cosets_so_far)} VT codes added")
-    total_redundant += redundant
-    cosets_so_far += [coset]
+num_n = 21
+results = np.zeros(num_n, np.int_)
+for i in range(3,num_n+1):
+    results[i] = count_intersection_size(i, 0, 1)
 
-print(f"the overall number of redundant words in {total_redundant}")
-print(f"the total number of words in the code is {calc_VT_size(0, n)*cosets.size}")
+print(results)
 
 """
 n = 7

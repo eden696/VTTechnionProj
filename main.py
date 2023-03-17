@@ -289,13 +289,35 @@ def count_intersection_size(n: int, a: int, b: int) -> int:
     u, c = np.unique(VT_filter, return_counts=True)
     return c[u]
 
+def calculated_expected_intersection_sizes(ns: NDArray) -> NDArray[np.int_]:
+    expected_values = np.left_shift(1, ns - 1)
+
+    for i in range(3, num_n+1):
+        expected_values[i] += calc_VT_size(0, i)
+
+    return expected_values
+
+
+def create_expected_vs_computed_graph(ns: NDArray, expected_values: NDArray, computed_values: NDArray):
+    plt.xticks(ns[3:])
+    plt.plot(ns[3:], expected_values[3:], 'b', label="expected values")
+    plt.plot(ns[3:], computed_values[3:], 'g', label="computed values")
+    plt.yscale('log')
+    plt.title(f'VT codes intersection size expected VS computed (log scale)')
+    plt.xlabel('length of words')
+    plt.ylabel('intersection size')
+    plt.legend(title='')
+    plt.savefig(f'figures_intersection_size.png')
+    plt.clf()
 
 num_n = 21
-results = np.zeros(num_n, np.int_)
-for i in range(3,num_n+1):
-    results[i] = count_intersection_size(i, 0, 1)
+ns = np.arange(num_n+1, dtype=np.int_)
+expected_values = calculated_expected_intersection_sizes(ns)
+computed_values = np.zeros_like(ns)
+for i in range(3, ns.size):
+    computed_values[i] = count_intersection_size(i, 0, 1)
 
-print(results)
+create_expected_vs_computed_graph(ns, expected_values, computed_values)
 
 """
 n = 7
